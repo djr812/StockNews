@@ -57,7 +57,7 @@ def getStockData(stock):
         # Find the positive difference between 1 and 2
         priceDiff = yesterdayClose - yesterdayOpen
         diffPercent = round((priceDiff / yesterdayClose) * 100)
-        upDown = "⬆️" if diffPercent > 0 else "⬇️"
+        upDown = "🔺" if diffPercent > 0 else "🔻"
         return upDown, diffPercent
     else:
         return None, None
