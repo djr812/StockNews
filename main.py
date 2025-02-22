@@ -31,7 +31,7 @@ with open(os.path.join(os.path.dirname(__file__), 'stocks.json')) as f:
 asx100symbols = [item['symbol'] for item in asx100]
 
 # Function to look up the name of an ASX100 symbol
-def get_company_name(symbol):
+def getCompanyName(symbol):
     for item in asx100:
         if item['symbol'] == symbol:
             return item['company_name']
@@ -41,63 +41,66 @@ def get_company_name(symbol):
 def getStockData(stock):
     # YFinance Connection
     # Define the ticker symbol
-    ticker_symbol = stock
+    tickerSymbol = stock
 
     # Create a Ticker object
-    ticker = yf.Ticker(ticker_symbol)
+    ticker = yf.Ticker(tickerSymbol)
 
     # Fetch historical market data
-    historical_data = ticker.history(period="1d")  # data for the last day
-    stk_close = historical_data[['Close']]
-    stk_open = historical_data[['Open']]
-    yesterday_close = stk_close["Close"].iloc[-1]
-    yesterday_open = stk_open["Open"].iloc[-1]
+    historicalData = ticker.history(period="1d")  # data for the last day
+    stkClose = historicalData[['Close']]
+    stkOpen = historicalData[['Open']]
+    yesterdayClose = stkClose["Close"].iloc[-1]
+    yesterdayOpen = stkOpen["Open"].iloc[-1]
     
-    if yesterday_close and yesterday_open:
+    if yesterdayClose and yesterdayOpen:
         # Find the positive difference between 1 and 2
-        price_diff = yesterday_close - yesterday_open
-        diff_percent = round((price_diff / yesterday_close) * 100)
-        up_down = "⬆️" if diff_percent > 0 else "⬇️"
-        return up_down, diff_percent
+        priceDiff = yesterdayClose - yesterdayOpen
+        diffPercent = round((priceDiff / yesterdayClose) * 100)
+        upDown = "⬆️" if diffPercent > 0 else "⬇️"
+        return upDown, diffPercent
     else:
         return None, None
 
 
-def GetStockNews(company_name):
-    # Use the News API to get articles related to the COMPANY_NAME.
-    news_params = {
+def GetStockNews(companyName):
+    # Use the News API to get articles related to the companyName.
+    newsParams = {
         "apiKey": NEWS_API_KEY,
-        "q": company_name,
+        "q": companyName,
         "searchIn": "title",
         "sortBy": "popularity",
     }
-    news_response = requests.get(NEWS_ENDPOINT, params=news_params)
-    news_response.raise_for_status()
-    news_data = news_response.json()
+    newsResponse = requests.get(NEWS_ENDPOINT, params=newsParams)
+    newsResponse.raise_for_status()
+    newsData = newsResponse.json()
 
     # Use Python slice operator to create a list that contains the first article.
-    articles = news_data["articles"]
-    top_article = articles[:1]
+    articles = newsData["articles"]
+    topArticle = articles[:1]
+    #print(topArticle)
+    return topArticle
 
-    return top_article
 
-
-def formatArticle(stock, top_article, up_down, diff_percent):    #up_down, diff_percent,
-    # formatted_article = [(f"{stock}: {up_down}  {abs(diff_percent)}%\nHeadline: {article['title']}. \n"
-    # f"Brief: {article['content']}") for article in top_article]
-    formatted_article = [(f"{stock}: {up_down} {abs(diff_percent)}% - {article['title']}. ") for article in top_article]
-    return formatted_article
+def formatArticle(stock, topArticle, upDown, diffPercent):    #upDown, diffPercent,
+    # formattedArticle = [(f"{stock}: {upDown}  {abs(diffPercent)}%\nHeadline: {article['title']}. \n"
+    # f"Brief: {article['content']}") for article in topArticle]
+    formattedArticle = [(f"| {stock}: {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
+    selectedArticle = formattedArticle[0]
+    return selectedArticle
 
     
 def buildArticleList():
-    article_list = []
+    articleList = []
+    changeInStock = 3
     for stock in asx100symbols:
-        company_name = get_company_name(stock)
-        up_down, diff_percent = getStockData(stock)
-        top_article = GetStockNews(company_name)
-        formatted_article = formatArticle(stock, top_article, up_down, diff_percent)
-        article_list.append(formatted_article)
-    return article_list
+        companyName = getCompanyName(stock)
+        upDown, diffPercent = getStockData(stock)
+        if abs(diffPercent) >= changeInStock:
+            topArticle = GetStockNews(companyName)
+            formattedArticle = formatArticle(stock, topArticle, upDown, diffPercent)
+            articleList.append(formattedArticle)
+    return articleList
 
 
 @app.route('/')

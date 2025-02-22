@@ -1,12 +1,23 @@
 [
-    {"company_name": "Apple Inc.", "symbol": "AAPL"},
-    {"company_name": "NVIDIA Corporation", "symbol": "NVDA"},
-    {"company_name": "Alphabet Inc. (Class A)", "symbol": "GOOGL"},
-    {"company_name": "Alphabet Inc. (Class C)", "symbol": "GOOG"},
-    {"company_name": "Meta Platforms, Inc.", "symbol": "META"},
-    {"company_name": "Microsoft Corporation", "symbol": "MSFT"},
-    {"company_name": "Amazon.com, Inc.", "symbol": "AMZN"},
-    {"company_name": "Tesla, Inc.", "symbol": "TSLA"},
-    {"company_name": "Broadcom Inc.", "symbol": "AVGO"},
-    {"company_name": "Advanced Micro Devices, Inc.", "symbol": "AMD"}
-  ]
+    {"company_name": "Commonwealth Bank of Australia", "symbol": "CBA.AX"},
+    {"company_name": "BHP Group Limited", "symbol": "BHP.AX"},
+    {"company_name": "CSL Limited", "symbol": "CSL.AX"},
+    {"company_name": "Westpac Banking Corporation", "symbol": "WBC.AX"},
+    {"company_name": "National Australia Bank Limited", "symbol": "NAB.AX"},
+    {"company_name": "ANZ Banking Group Limited", "symbol": "ANZ.AX"},
+    {"company_name": "Macquarie Group Limited", "symbol": "MQG.AX"},
+    {"company_name": "Woolworths Group Limited", "symbol": "WOW.AX"},
+    {"company_name": "Wesfarmers Limited", "symbol": "WES.AX"},
+    {"company_name": "Telstra Corporation Limited", "symbol": "TLS.AX"},
+    {"company_name": "Scentre Group", "symbol": "SCG.AX"},
+    {"company_name": "Transurban Group", "symbol": "TCL.AX"},
+    {"company_name": "Insurance Australia Group Limited", "symbol": "IAG.AX"},
+    {"company_name": "Sonic Healthcare Limited", "symbol": "SHL.AX"},
+    {"company_name": "Qantas Airways Limited", "symbol": "QAN.AX"},
+    {"company_name": "Goodman Group", "symbol": "GMG.AX"},
+    {"company_name": "Origin Energy Limited", "symbol": "ORG.AX"},
+    {"company_name": "Rio Tinto Limited", "symbol": "RIO.AX"},
+    {"company_name": "Fortescue Metals Group Ltd", "symbol": "FMG.AX"}
+]
+   
+  
