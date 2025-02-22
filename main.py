@@ -4,24 +4,24 @@ from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 import os
 import json
+import yfinance as yf
+import pandas as pd
+
 
 load_dotenv()
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 application = app
 
-# Stock API details
-STOCK_ENDPOINT = "https://www.alphavantage.co/query"
-STOCK_API_KEY = os.getenv("STOCK_API_KEY")
-
 # News API details
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
+
 # Time variables
-yesterday_date = (datetime.now() - timedelta(1)).strftime('%Y-%m-%d')
-day_before_yesterday_date = (datetime.now() - timedelta(2)).strftime('%Y-%m-%d')
-five_days_ago_date = (datetime.now() - timedelta(5)).strftime('%Y-%m-%d')
+# yesterday_date = (datetime.now() - timedelta(1)).strftime('%Y-%m-%d')
+# day_before_yesterday_date = (datetime.now() - timedelta(2)).strftime('%Y-%m-%d')
+# five_days_ago_date = (datetime.now() - timedelta(5)).strftime('%Y-%m-%d')
 
 # Load stock symbols from stocks.json
 with open(os.path.join(os.path.dirname(__file__), 'stocks.json')) as f:
@@ -39,36 +39,23 @@ def get_company_name(symbol):
 
 # Get the stock data from API
 def getStockData(stock):
-    stock_params = {
-        "function": "TIME_SERIES_DAILY",
-        "symbol": stock,
-        "apikey": STOCK_API_KEY,
-        "outputsize": "compact",
-    }
-    # Get the stock data from API
-    stk_response = requests.get(STOCK_ENDPOINT, params=stock_params)
-    stk_response.raise_for_status()
-    stk_data = stk_response.json()
+    # YFinance Connection
+    # Define the ticker symbol
+    ticker_symbol = stock
 
-    print(stk_data)
+    # Create a Ticker object
+    ticker = yf.Ticker(ticker_symbol)
 
-    # Get yesterday's closing stock price.
-    try:
-        yesterday_close = float(stk_data["Time Series (Daily)"][yesterday_date]["4. close"])
-    except KeyError:
-        print(f"No data available for {yesterday_date}")
-        yesterday_close = None
-
-    # Get the day before yesterday's closing stock price
-    try:
-        dby_close = float(stk_data["Time Series (Daily)"][day_before_yesterday_date]["4. close"])
-    except KeyError:
-        print(f"No data available for {day_before_yesterday_date}")
-        dby_close = None
-
-    if yesterday_close and dby_close:
+    # Fetch historical market data
+    historical_data = ticker.history(period="1d")  # data for the last day
+    stk_close = historical_data[['Close']]
+    stk_open = historical_data[['Open']]
+    yesterday_close = stk_close["Close"].iloc[-1]
+    yesterday_open = stk_open["Open"].iloc[-1]
+    
+    if yesterday_close and yesterday_open:
         # Find the positive difference between 1 and 2
-        price_diff = yesterday_close - dby_close
+        price_diff = yesterday_close - yesterday_open
         diff_percent = round((price_diff / yesterday_close) * 100)
         up_down = "⬆️" if diff_percent > 0 else "⬇️"
         return up_down, diff_percent
@@ -95,29 +82,22 @@ def GetStockNews(company_name):
     return top_article
 
 
-def formatArticle(stock, top_article):    #up_down, diff_percent,
+def formatArticle(stock, top_article, up_down, diff_percent):    #up_down, diff_percent,
     # formatted_article = [(f"{stock}: {up_down}  {abs(diff_percent)}%\nHeadline: {article['title']}. \n"
     # f"Brief: {article['content']}") for article in top_article]
-    formatted_article = [(f"{stock}: {article['title']}. ") for article in top_article]
+    formatted_article = [(f"{stock}: {up_down} {abs(diff_percent)}% - {article['title']}. ") for article in top_article]
     return formatted_article
 
     
 def buildArticleList():
     article_list = []
     for stock in asx100symbols:
-        print(stock)
         company_name = get_company_name(stock)
-        print(company_name)
-        #up_down, diff_percent = getStockData(stock)
+        up_down, diff_percent = getStockData(stock)
         top_article = GetStockNews(company_name)
-        formatted_article = formatArticle(stock, top_article)
-        print(formatted_article)
+        formatted_article = formatArticle(stock, top_article, up_down, diff_percent)
         article_list.append(formatted_article)
     return article_list
-
-# articles = buildArticleList()
-# for article in articles:
-#     print(article)
 
 
 @app.route('/')
