@@ -1,0 +1,34 @@
+# Python-related
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+*.db
+
+# Flask specific
+instance/
+*.log
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# Mac OS-specific
+.DS_Store
+
+# Windows-specific
+Thumbs.db
+
+# Sensitive data (be cautious with these)
+*.env
+.env
+
+# Miscellaneous
+*.sqlite

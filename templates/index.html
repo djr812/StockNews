@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock News</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Stock News</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Latest News</h2>
+            <!-- News articles will go here -->
+            <div class="news-ticker">
+                <marquee behavior="scroll" direction="left">
+                    <!-- Articles will be dynamically inserted here -->
+                    {% for article in articles %}
+                        <span>{{ article }}</span>
+                    {% endfor %}
+                </marquee>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Stock News. All rights reserved.</p>
+    </footer>
+</body>
+</html>

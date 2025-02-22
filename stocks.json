@@ -1,0 +1,12 @@
+[
+    {"company_name": "Apple Inc.", "symbol": "AAPL"},
+    {"company_name": "NVIDIA Corporation", "symbol": "NVDA"},
+    {"company_name": "Alphabet Inc. (Class A)", "symbol": "GOOGL"},
+    {"company_name": "Alphabet Inc. (Class C)", "symbol": "GOOG"},
+    {"company_name": "Meta Platforms, Inc.", "symbol": "META"},
+    {"company_name": "Microsoft Corporation", "symbol": "MSFT"},
+    {"company_name": "Amazon.com, Inc.", "symbol": "AMZN"},
+    {"company_name": "Tesla, Inc.", "symbol": "TSLA"},
+    {"company_name": "Broadcom Inc.", "symbol": "AVGO"},
+    {"company_name": "Advanced Micro Devices, Inc.", "symbol": "AMD"}
+  ]
