@@ -113,7 +113,8 @@ def buildArticleList():
             fullArticle = fullFormattedArticle(stock, topArticle)
             completeArticleList.append(topArticle)
             articleList.append(formattedArticle)
-    return articleList, topArticle, yesterdayDate
+    print(completeArticleList)
+    return articleList, completeArticleList, yesterdayDate
 
 
 @app.route('/')

@@ -22,12 +22,17 @@
             </div>
         </section>
         <section class="news-columns">
+            <div>
             {% for article in completeArticleList %}
-                <div class="news-column">
-                    <h3>{{ article.title }}</h3>
-                    <p>{{ article.content }}</p>
+                <div class="news-row">
+                    {% for key in article %}
+                        <h3>{{ key['title'] }}</h3>
+                        <p>{{ key['content'] }}</p>
+                        <p><a href="{{ key['url'] }}" target="_blank">Read more</a></p>
+                    {% endfor %}
                 </div>
             {% endfor %}
+            </div>
         </section>
     </main>
     <footer>
