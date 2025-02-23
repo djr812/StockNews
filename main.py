@@ -78,7 +78,7 @@ def GetStockNews(companyName):
         newsData = newsResponse.json()
     except requests.exceptions.HTTPError as e:
         print(f"Error: {newsResponse.status_code} - {newsResponse.text}")
-        topArticle = [{"stock": "error", "title": "Unable to retrieve news data."}]
+        topArticle = [{"title": "Unable to retrieve news data.", "content": "Please try again later.", "url": ""}]
         return topArticle
     else:
         # Use Python slice operator to create a list that contains the first article.
@@ -94,9 +94,15 @@ def formatArticle(stock, topArticle, upDown, diffPercent):    #upDown, diffPerce
     selectedArticle = formattedArticle[0]
     return selectedArticle
 
+
+def fullFormattedArticle(stock, topArticle):
+    fullFormattedArticle = [(f"{stock}: {article['title']}. \nBrief: {article['content']} \n{article['url']}") for article in topArticle]
+    selectedArticle = fullFormattedArticle[0]
+    return selectedArticle
     
 def buildArticleList():
     articleList = []
+    completeArticleList = []
     changeInStock = 3
     for stock in asx100symbols:
         companyName = getCompanyName(stock)
@@ -104,14 +110,16 @@ def buildArticleList():
         if abs(diffPercent) >= changeInStock:
             topArticle = GetStockNews(companyName)
             formattedArticle = formatArticle(stock, topArticle, upDown, diffPercent)
+            fullArticle = fullFormattedArticle(stock, topArticle)
+            completeArticleList.append(fullArticle)
             articleList.append(formattedArticle)
-    return articleList, yesterdayDate
+    return articleList, completeArticleList, yesterdayDate
 
 
 @app.route('/')
 def index():
-    articles, yesterdayDate = buildArticleList()
-    return render_template("index.html", articles=articles, yesterdayDate=yesterdayDate)
+    articles, completeArticleList, yesterdayDate = buildArticleList()
+    return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate)
 
 
 if __name__ == '__main__':
