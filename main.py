@@ -71,15 +71,19 @@ def GetStockNews(companyName):
         "searchIn": "title",
         "sortBy": "popularity",
     }
-    newsResponse = requests.get(NEWS_ENDPOINT, params=newsParams)
-    newsResponse.raise_for_status()
-    newsData = newsResponse.json()
-
-    # Use Python slice operator to create a list that contains the first article.
-    articles = newsData["articles"]
-    topArticle = articles[:1]
-    #print(topArticle)
-    return topArticle
+    try:
+        newsResponse = requests.get(NEWS_ENDPOINT, params=newsParams)
+        newsResponse.raise_for_status()
+        newsData = newsResponse.json()
+    except requests.exceptions.HTTPError as e:
+        print(f"Error: {newsResponse.status_code} - {newsResponse.text}")
+        topArticle = [{"stock": "error", "title": "Unable to retrieve news data."}]
+        return topArticle
+    else:
+        # Use Python slice operator to create a list that contains the first article.
+        articles = newsData["articles"]
+        topArticle = articles[:1]
+        return topArticle
 
 
 def formatArticle(stock, topArticle, upDown, diffPercent):    #upDown, diffPercent,
