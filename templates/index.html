@@ -22,10 +22,9 @@
             </div>
         </section>
         <section class="news-columns">
-            {% for article in fullArticles %}
+            {% for article in completeArticleList %}
                 <div class="news-column">
                     <h3>{{ article }}</h3>
-                    <p>{{ article }}</p>
                     <!-- Add more details about the article here if needed -->
                 </div>
             {% endfor %}
