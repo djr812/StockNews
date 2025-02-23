@@ -12,7 +12,7 @@
     </header>
     <main>
         <section>
-            <h2>Latest News</h2>
+            <h2>News for {{ yesterdayDate }}</h2>
             <div class="news-ticker">
                 <marquee behavior="scroll" direction="left">
                     {% for article in articles %}
@@ -20,6 +20,15 @@
                     {% endfor %}
                 </marquee>
             </div>
+        </section>
+        <section class="news-columns">
+            {% for article in fullArticles %}
+                <div class="news-column">
+                    <h3>{{ article }}</h3>
+                    <p>{{ article }}</p>
+                    <!-- Add more details about the article here if needed -->
+                </div>
+            {% endfor %}
         </section>
     </main>
     <footer>

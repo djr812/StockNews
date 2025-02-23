@@ -25,6 +25,19 @@ main {
     display: inline-block;
     padding: 0 2rem;
 }
+.news-columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+.news-column {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin: 0.5rem;
+    padding: 1rem;
+}
 footer {
     background-color: #333;
     color: #fff;
