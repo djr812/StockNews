@@ -24,8 +24,8 @@
         <section class="news-columns">
             {% for article in completeArticleList %}
                 <div class="news-column">
-                    <h3>{{ article }}</h3>
-                    <!-- Add more details about the article here if needed -->
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.content }}</p>
                 </div>
             {% endfor %}
         </section>

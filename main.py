@@ -111,9 +111,9 @@ def buildArticleList():
             topArticle = GetStockNews(companyName)
             formattedArticle = formatArticle(stock, topArticle, upDown, diffPercent)
             fullArticle = fullFormattedArticle(stock, topArticle)
-            completeArticleList.append(fullArticle)
+            completeArticleList.append(topArticle)
             articleList.append(formattedArticle)
-    return articleList, completeArticleList, yesterdayDate
+    return articleList, topArticle, yesterdayDate
 
 
 @app.route('/')
