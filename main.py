@@ -52,15 +52,16 @@ def getStockData(stock):
     stkOpen = historicalData[['Open']]
     yesterdayClose = stkClose["Close"].iloc[-1]
     yesterdayOpen = stkOpen["Open"].iloc[-1]
+    yesterdayDate = historicalData.index[-1].strftime('%A %d-%m-%Y')
     
     if yesterdayClose and yesterdayOpen:
         # Find the positive difference between 1 and 2
         priceDiff = yesterdayClose - yesterdayOpen
         diffPercent = round((priceDiff / yesterdayClose) * 100)
         upDown = "🔺" if diffPercent > 0 else "🔻"
-        return upDown, diffPercent
+        return upDown, diffPercent, yesterdayDate
     else:
-        return None, None
+        return None, None, None
 
 
 def GetStockNews(companyName):
@@ -99,18 +100,18 @@ def buildArticleList():
     changeInStock = 3
     for stock in asx100symbols:
         companyName = getCompanyName(stock)
-        upDown, diffPercent = getStockData(stock)
+        upDown, diffPercent, yesterdayDate = getStockData(stock)
         if abs(diffPercent) >= changeInStock:
             topArticle = GetStockNews(companyName)
             formattedArticle = formatArticle(stock, topArticle, upDown, diffPercent)
             articleList.append(formattedArticle)
-    return articleList
+    return articleList, yesterdayDate
 
 
 @app.route('/')
 def index():
-    articles = buildArticleList()
-    return render_template("index.html", articles=articles)
+    articles, yesterdayDate = buildArticleList()
+    return render_template("index.html", articles=articles, yesterdayDate=yesterdayDate)
 
 
 if __name__ == '__main__':
