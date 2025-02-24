@@ -37,9 +37,18 @@
                 <div class="news-column">
                     {% for key in article %}
                         <h3>{{ key['title'] }}</h3>
-                        <p>{{ key['content'] }}</p>
-                        <p><a href="{{ key['url'] }}" target="_blank">Read more</a></p>
+                        <p>{{ key['content'] }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
                     {% endfor %}
+                </div>
+            {% endfor %}
+        </section>
+        <h2>ASX 200 News</h2>
+        <section class="asx-news-columns">
+            {% for key in asxArticles %}
+                <div class="asx-news-column">
+                    <h3>{{ key.title }}</h3>
+                    <p><b>By:</b> {{ key.author }} &nbsp;&nbsp; <b>Posted:</b> {{ key.publishedAt }}</p>
+                    <p>{{ key.content }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
                 </div>
             {% endfor %}
         </section>

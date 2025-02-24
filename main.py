@@ -117,6 +117,36 @@ def GetStockNews(companyName, yesterdayDate):
         return topArticle
 
 
+def getASXNews(yesterdayDate):
+    
+    fDate = datetime.strptime(yesterdayDate,'%A, %d %B %Y') - timedelta(days=3)
+    fromDate = fDate.strftime('%Y-%m-%d') 
+    
+    newsParams = {
+        "apiKey": NEWS_API_KEY,
+        "q": "ASX 200",
+        "searchIn": "content",
+        "sortBy": "popularity",
+        "from": fromDate,
+        "language": "en",
+    }
+
+    try:
+        newsResponse = requests.get(NEWS_ENDPOINT, params=newsParams)
+        newsResponse.raise_for_status()
+        newsData = newsResponse.json()
+    except requests.exceptions.HTTPError as e:
+        print(f"Error: {newsResponse.status_code} - {newsResponse.text}")
+        asxArticle = [{"title": "Unable to retrieve news data.", "content": "Please try again later.", "url": ""}, 
+                      {"title": "Unable to retrieve news data.", "content": "Please try again later.", "url": ""}]
+        return asxArticles
+    else:
+        # Use Python slice operator to create a list that contains the first article.
+        articles = newsData["articles"]
+        asxArticles = articles[:2]
+        return asxArticles
+
+
 def formatArticle(stock, companyName, topArticle, upDown, diffPercent):  
     '''
     Name:       formatArticle
@@ -130,7 +160,7 @@ def formatArticle(stock, companyName, topArticle, upDown, diffPercent):
                 diffPercent - float
     Returns:    selectedArticle - string
     '''
-    formattedArticle = [(f"| {stock[:-3]}:{companyName} {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
+    formattedArticle = [(f"| {stock[:-3]}: {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
     try:
         selectedArticle = formattedArticle[0]
     except:
@@ -186,8 +216,10 @@ def buildArticleList():
                 formattedArticle = formatArticle(stock, companyName, topArticle, upDown, diffPercent)
                 completeArticleList.append(topArticle)
                 articleList.append(formattedArticle)
+    asxArticles = getASXNews(yesterdayDate)
+    print(asxArticles)
         
-    return articleList, completeArticleList, yesterdayDate, tickerList
+    return articleList, completeArticleList, yesterdayDate, tickerList, asxArticles
 
 
 @app.route('/')
@@ -199,8 +231,8 @@ def index():
     Params:     None
     Returns     render_template
     '''
-    articles, completeArticleList, yesterdayDate, tickerList = buildArticleList()
-    return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate, tickerList=tickerList)
+    articles, completeArticleList, yesterdayDate, tickerList, asxArticles = buildArticleList()
+    return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate, tickerList=tickerList, asxArticles=asxArticles)
 
 
 if __name__ == '__main__':
