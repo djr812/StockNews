@@ -16,7 +16,9 @@ function updateDateTime() {
         hour12: true      // 12-hour clock (e.g. "PM")
     };
 
-    var formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+    let formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+    
+    formattedDate = formattedDate.replace(/(\w+), (\w+)/, '$1 $2'); // Remove the weekday comma
 
     document.getElementById('datetime').textContent = "Accurate as at: " + formattedDate;
 }

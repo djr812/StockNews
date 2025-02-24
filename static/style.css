@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Tahoma', sans-serif;
     background-color: #f4f4f9;
     margin: 0;
     padding: 0;
@@ -11,7 +11,7 @@ header {
     text-align: center;
 }
 main {
-    padding: 2rem;
+    padding: 10px;
 }
 .news-ticker {
     background-color: #fff;

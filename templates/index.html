@@ -11,6 +11,7 @@
         <h1>Welcome to Stock News</h1>
     </header>
     <main>
+        <h2>News for {{ yesterdayDate }}</h2>
         <section>
             <div class="ticker">
                 <marquee behavior="scroll" direction="left">
@@ -20,10 +21,8 @@
                 </marquee>
             </div>
         </section>
-        <p> </p>
+        <b>ASX100 Company's with a 1 Day rise or fall of > 5%</b>
         <section>
-            <h2>News for {{ yesterdayDate }}</h2>
-            <h3>For ASX100 Companys with a 1 Day rise or fall of > 5%</h3>
             <div class="news-ticker">
                 <marquee behavior="scroll" direction="left">
                     {% for article in articles %}
@@ -37,7 +36,8 @@
                 <div class="news-column">
                     {% for key in article %}
                         <h3>{{ key['title'] }}</h3>
-                        <p>{{ key['content'] }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
+                        <p><b>By:</b> {{ key['author'] }} &nbsp;&nbsp; <b>Posted:</b> {{ key['publishedAt'] | replace ("T"," ") | replace ("Z","") }}</p>
+                        <p>{{ key['content'] | replace ("&amp;", "&") }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
                     {% endfor %}
                 </div>
             {% endfor %}
@@ -47,8 +47,8 @@
             {% for key in asxArticles %}
                 <div class="asx-news-column">
                     <h3>{{ key.title }}</h3>
-                    <p><b>By:</b> {{ key.author }} &nbsp;&nbsp; <b>Posted:</b> {{ key.publishedAt }}</p>
-                    <p>{{ key.content }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
+                    <p><b>By:</b> {{ key.author }} &nbsp;&nbsp; <b>Posted:</b> {{ key.publishedAt | replace ("T"," ") | replace ("Z","") }}</p>
+                    <p>{{ key.content | replace ("&amp;", "&") }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
                 </div>
             {% endfor %}
         </section>
