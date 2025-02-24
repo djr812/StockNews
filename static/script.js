@@ -13,7 +13,8 @@ function updateDateTime() {
         day: 'numeric',   // Day of the month (e.g. "24")
         hour: 'numeric',  // Hour (e.g. "2")
         minute: 'numeric',// Minute (e.g. "25")
-        hour12: true      // 12-hour clock (e.g. "PM")
+        hour12: true,      // 12-hour clock (e.g. "PM")
+        timeZoneName: 'short' // e.g., "AEST"
     };
 
     let formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);

@@ -17,7 +17,7 @@ main {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 1rem;
-    margin-top: 1rem;
+    margin-top: 5px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -32,6 +32,7 @@ main {
     margin-top: 1rem;
     overflow: hidden;
     white-space: nowrap;
+    margin-bottom: 5px;
 }
 .ticker span {
     display: inline-block;
@@ -40,7 +41,7 @@ main {
 .news-columns {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 2rem;
+    margin-top: 5px;
 }
 .news-column {
     flex: 1;
@@ -49,6 +50,10 @@ main {
     border: 1px solid #ddd;
     margin: 0.5rem;
     padding: 1rem;
+}
+.asx-200-news-heading{
+    font-size: 1.17em; /* Equivalent to the default size of <h3> */
+    margin: 5px; 
 }
 .asx-news-columns {
     display: flex;

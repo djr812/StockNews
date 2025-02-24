@@ -243,7 +243,9 @@ def buildArticleList():
                 formattedArticle = formatArticle(
                     stock, companyName, topArticle, upDown, diffPercent
                 )
-                completeArticleList.append(topArticle)
+                print(topArticle)
+                if topArticle != []:
+                    completeArticleList.append(topArticle)
                 articleList.append(formattedArticle)
     asxArticles = getASXNews(yesterdayDate)
 
