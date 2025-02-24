@@ -100,18 +100,24 @@ def GetStockNews(companyName, yesterdayDate):
         return topArticle
 
 
-def formatArticle(stock, companyNane, topArticle, upDown, diffPercent):    #upDown, diffPercent,
-    formattedArticle = [(f"| {stock[:-3]}:{companyNane} {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
+def formatArticle(stock, companyName, topArticle, upDown, diffPercent):    #upDown, diffPercent,
+    formattedArticle = [(f"| {stock[:-3]}:{companyName} {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
     try:
         selectedArticle = formattedArticle[0]
     except:
-        selectedArticle = f"| {stock[:-3]}: {upDown} {abs(diffPercent)}% - No News Found for {companyNane} |"
+        selectedArticle = f"| {stock[:-3]}: {upDown} {abs(diffPercent)}% - No News Found for {companyName} |"
     return selectedArticle
+
+
+def formatTickerPoint(stock, companyName, upDown, diffPercent):
+    formattedTickerPoint = f"| {stock[:-3]}:{companyName} {upDown} {abs(diffPercent)}% | "
+    return formattedTickerPoint
 
     
 def buildArticleList():
     articleList = []
     completeArticleList = []
+    tickerList = []
     changeInStock = 5
     for stock in asx100symbols:
         companyName = getCompanyName(stock)
@@ -121,19 +127,21 @@ def buildArticleList():
             upDown = 0
             diffPercent = 0
         else:
+            tickerPoint = formatTickerPoint(stock, companyName, upDown, diffPercent)
+            tickerList.append(tickerPoint)
             if abs(diffPercent) >= changeInStock:
                 topArticle = GetStockNews(companyName, yesterdayDate)
                 formattedArticle = formatArticle(stock, companyName, topArticle, upDown, diffPercent)
                 completeArticleList.append(topArticle)
                 articleList.append(formattedArticle)
         
-    return articleList, completeArticleList,yesterdayDate
+    return articleList, completeArticleList, yesterdayDate, tickerList
 
 
 @app.route('/')
 def index():
-    articles, completeArticleList, yesterdayDate = buildArticleList()
-    return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate)
+    articles, completeArticleList, yesterdayDate, tickerList = buildArticleList()
+    return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate, tickerList=tickerList)
 
 
 if __name__ == '__main__':

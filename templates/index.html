@@ -12,6 +12,16 @@
     </header>
     <main>
         <section>
+            <div class="ticker">
+                <marquee behavior="scroll" direction="left">
+                    {% for ticker in tickerList %}
+                        <span>{{ ticker }}</span>
+                    {% endfor %}
+                </marquee>
+            </div>
+        </section>
+        <p> </p>
+        <section>
             <h2>News for {{ yesterdayDate }}</h2>
             <h3>For ASX100 Companys with a 1 Day rise or fall of > 5%</h3>
             <div class="news-ticker">
