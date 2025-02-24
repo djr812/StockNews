@@ -18,20 +18,22 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 
-# Time variables
-# yesterday_date = (datetime.now() - timedelta(1)).strftime('%Y-%m-%d')
-# day_before_yesterday_date = (datetime.now() - timedelta(2)).strftime('%Y-%m-%d')
-# five_days_ago_date = (datetime.now() - timedelta(5)).strftime('%Y-%m-%d')
-
 # Load stock symbols from stocks.json
-with open(os.path.join(os.path.dirname(__file__), 'stocks.json')) as f:
+with open('stocks.json') as f:
     asx100 = json.load(f)
 
 # Extract symbols into an array
 asx100symbols = [item['symbol'] for item in asx100]
 
-# Function to look up the name of an ASX100 symbol
+
 def getCompanyName(symbol):
+    '''
+    Name:       getCompanyName
+    Desc:       Look up the company name of an ASX100
+                symbol
+    Params:     symbol - string
+    Returns:    None
+    '''
     for item in asx100:
         if item['symbol'] == symbol:
             return item['company_name']
@@ -39,6 +41,14 @@ def getCompanyName(symbol):
 
 # Get the stock data from API
 def getStockData(stock):
+    '''
+    Name:       getStockData
+    Desc:       Get Stock Data from yFinance API
+    Params:     stock - string
+    Returns:    upDown - string (emoji)
+                diffPercent - float
+                yesterdayDate - string
+    '''
     # YFinance Connection
     # Define the ticker symbol
     tickerSymbol = stock
@@ -70,6 +80,14 @@ def getStockData(stock):
 
 
 def GetStockNews(companyName, yesterdayDate):
+    '''
+    Name:       GetStockNews
+    Desc:       Get current news articles about company
+                passed in companyName from NewsAPI
+    Params:     companyName - string
+                yesterdayDate - string
+    Returns:    topArticle - list   
+    '''
     # Use the News API to get articles related to the companyName
     # from 2 days prior
     
@@ -99,7 +117,19 @@ def GetStockNews(companyName, yesterdayDate):
         return topArticle
 
 
-def formatArticle(stock, companyName, topArticle, upDown, diffPercent):    #upDown, diffPercent,
+def formatArticle(stock, companyName, topArticle, upDown, diffPercent):  
+    '''
+    Name:       formatArticle
+    Desc:       Format the Article Information found on
+                NewsAPI with the current stock price
+                details ready for News Ticker
+    Params:     stock - string
+                companyName - string
+                topArticle - list
+                upDown - string (emoji)
+                diffPercent - float
+    Returns:    selectedArticle - string
+    '''
     formattedArticle = [(f"| {stock[:-3]}:{companyName} {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
     try:
         selectedArticle = formattedArticle[0]
@@ -108,12 +138,35 @@ def formatArticle(stock, companyName, topArticle, upDown, diffPercent):    #upDo
     return selectedArticle
 
 
-def formatTickerPoint(stock, companyName, upDown, diffPercent):
+def formatTickerPoint(stock, upDown, diffPercent):
+    '''
+    Name:       formatTickerPoint
+    Desc:       Format the information string for the 
+                stock ticker for each stock passed 
+                to it.
+    Params:     stock - string
+                upDown - string (emoji)
+                diffPercent - float
+    Returns:    formattedTickerPoint - string
+    '''
     formattedTickerPoint = f"| <b>{stock[:-3]}</b> - {upDown} <b>{abs(diffPercent)}%</b> | &nbsp;&nbsp;&nbsp;"
     return formattedTickerPoint
 
     
 def buildArticleList():
+    '''
+    Name:       buildArticleList
+    Desc:       Build 3 different lists from the arguments
+                passed to it - articleList (a brief title for
+                the ticker), completeArticleList (a full article
+                for the news section) and tickerList (a stock
+                symbol and price movement)
+    Params:     None
+    Returns:    articleList - list
+                completeArticleList - list
+                yesterdayDate - string
+                tickerList - list
+    '''
     articleList = []
     completeArticleList = []
     tickerList = []
@@ -126,7 +179,7 @@ def buildArticleList():
             upDown = 0
             diffPercent = 0
         else:
-            tickerPoint = formatTickerPoint(stock, companyName, upDown, diffPercent)
+            tickerPoint = formatTickerPoint(stock, upDown, diffPercent)
             tickerList.append(tickerPoint)
             if abs(diffPercent) >= changeInStock:
                 topArticle = GetStockNews(companyName, yesterdayDate)
@@ -139,6 +192,13 @@ def buildArticleList():
 
 @app.route('/')
 def index():
+    '''
+    Name:       index
+    Desc:       Trigger building of index.html and pass
+                relevant data
+    Params:     None
+    Returns     render_template
+    '''
     articles, completeArticleList, yesterdayDate, tickerList = buildArticleList()
     return render_template("index.html", articles=articles, completeArticleList=completeArticleList, yesterdayDate=yesterdayDate, tickerList=tickerList)
 
