@@ -15,7 +15,7 @@
             <div class="ticker">
                 <marquee behavior="scroll" direction="left">
                     {% for ticker in tickerList %}
-                        <span>{{ ticker }}</span>
+                        <span>{{ ticker | safe }}</span>
                     {% endfor %}
                 </marquee>
             </div>

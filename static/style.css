@@ -25,6 +25,18 @@ main {
     display: inline-block;
     padding: 0 2rem;
 }
+.ticker {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin-top: 1rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.ticker span {
+    display: inline-block;
+    padding: 0 2rem;
+}
 .news-columns {
     display: flex;
     flex-wrap: wrap;

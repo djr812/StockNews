@@ -48,7 +48,6 @@ def getStockData(stock):
 
     # Fetch historical market data
     historicalData = ticker.history(period="1d")  # data for the last day
-    print(historicalData)
     stkClose = historicalData[['Close']]
     stkOpen = historicalData[['Open']]
     try:
@@ -63,7 +62,7 @@ def getStockData(stock):
         if yesterdayClose and yesterdayOpen:
             # Find the positive difference between Open and Close
             priceDiff = yesterdayClose - yesterdayOpen
-            diffPercent = round((priceDiff / yesterdayClose) * 100)
+            diffPercent = round((priceDiff / yesterdayClose) * 100, 1)
             upDown = "🔺" if diffPercent > 0 else "🔻"
             return upDown, diffPercent, yesterdayDate
         else:
@@ -110,7 +109,7 @@ def formatArticle(stock, companyName, topArticle, upDown, diffPercent):    #upDo
 
 
 def formatTickerPoint(stock, companyName, upDown, diffPercent):
-    formattedTickerPoint = f"| {stock[:-3]}:{companyName} {upDown} {abs(diffPercent)}% | "
+    formattedTickerPoint = f"| <b>{stock[:-3]}</b> - {upDown} <b>{abs(diffPercent)}%</b> | &nbsp;&nbsp;&nbsp;"
     return formattedTickerPoint
 
     
