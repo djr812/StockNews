@@ -243,7 +243,6 @@ def buildArticleList():
                 formattedArticle = formatArticle(
                     stock, companyName, topArticle, upDown, diffPercent
                 )
-                print(topArticle)
                 if topArticle != []:
                     completeArticleList.append(topArticle)
                 articleList.append(formattedArticle)
