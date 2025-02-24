@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import json
 import yfinance as yf
-import pandas as pd
+# import pandas as pd
 
 
 load_dotenv()
