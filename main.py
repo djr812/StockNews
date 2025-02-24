@@ -48,29 +48,42 @@ def getStockData(stock):
 
     # Fetch historical market data
     historicalData = ticker.history(period="1d")  # data for the last day
+    print(historicalData)
     stkClose = historicalData[['Close']]
     stkOpen = historicalData[['Open']]
-    yesterdayClose = stkClose["Close"].iloc[-1]
-    yesterdayOpen = stkOpen["Open"].iloc[-1]
-    yesterdayDate = historicalData.index[-1].strftime('%A %d-%m-%Y')
-    
-    if yesterdayClose and yesterdayOpen:
-        # Find the positive difference between 1 and 2
-        priceDiff = yesterdayClose - yesterdayOpen
-        diffPercent = round((priceDiff / yesterdayClose) * 100)
-        upDown = "🔺" if diffPercent > 0 else "🔻"
-        return upDown, diffPercent, yesterdayDate
+    try:
+        yesterdayClose = stkClose["Close"].iloc[-1]
+    except:
+        yesterdayClose = 0
+        yesterdayOpen = 0
+        yesterdayDate = '2025-01-01'
     else:
-        return None, None, None
+        yesterdayOpen = stkOpen["Open"].iloc[-1]
+        yesterdayDate = historicalData.index[-1].strftime('%A, %d %B %Y')
+        if yesterdayClose and yesterdayOpen:
+            # Find the positive difference between Open and Close
+            priceDiff = yesterdayClose - yesterdayOpen
+            diffPercent = round((priceDiff / yesterdayClose) * 100)
+            upDown = "🔺" if diffPercent > 0 else "🔻"
+            return upDown, diffPercent, yesterdayDate
+        else:
+            return 0, 0, '2025-01-01'
 
 
-def GetStockNews(companyName):
-    # Use the News API to get articles related to the companyName.
+def GetStockNews(companyName, yesterdayDate):
+    # Use the News API to get articles related to the companyName
+    # from 2 days prior
+    
+    fDate = datetime.strptime(yesterdayDate,'%A, %d %B %Y') - timedelta(days=1)
+    fromDate = fDate.strftime('%Y-%m-%d') 
+    
     newsParams = {
         "apiKey": NEWS_API_KEY,
         "q": companyName,
-        "searchIn": "title",
+        "searchIn": "content",
         "sortBy": "popularity",
+        "from": fromDate,
+        "language": "en",
     }
     try:
         newsResponse = requests.get(NEWS_ENDPOINT, params=newsParams)
@@ -87,34 +100,34 @@ def GetStockNews(companyName):
         return topArticle
 
 
-def formatArticle(stock, topArticle, upDown, diffPercent):    #upDown, diffPercent,
-    # formattedArticle = [(f"{stock}: {upDown}  {abs(diffPercent)}%\nHeadline: {article['title']}. \n"
-    # f"Brief: {article['content']}") for article in topArticle]
-    formattedArticle = [(f"| {stock}: {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
-    selectedArticle = formattedArticle[0]
+def formatArticle(stock, companyNane, topArticle, upDown, diffPercent):    #upDown, diffPercent,
+    formattedArticle = [(f"| {stock[:-3]}:{companyNane} {upDown} {abs(diffPercent)}% - {article['title']} | ") for article in topArticle]
+    try:
+        selectedArticle = formattedArticle[0]
+    except:
+        selectedArticle = f"| {stock[:-3]}: {upDown} {abs(diffPercent)}% - No News Found for {companyNane} |"
     return selectedArticle
 
-
-def fullFormattedArticle(stock, topArticle):
-    fullFormattedArticle = [(f"{stock}: {article['title']}. \nBrief: {article['content']} \n{article['url']}") for article in topArticle]
-    selectedArticle = fullFormattedArticle[0]
-    return selectedArticle
     
 def buildArticleList():
     articleList = []
     completeArticleList = []
-    changeInStock = 3
+    changeInStock = 5
     for stock in asx100symbols:
         companyName = getCompanyName(stock)
-        upDown, diffPercent, yesterdayDate = getStockData(stock)
-        if abs(diffPercent) >= changeInStock:
-            topArticle = GetStockNews(companyName)
-            formattedArticle = formatArticle(stock, topArticle, upDown, diffPercent)
-            fullArticle = fullFormattedArticle(stock, topArticle)
-            completeArticleList.append(topArticle)
-            articleList.append(formattedArticle)
-    print(completeArticleList)
-    return articleList, completeArticleList, yesterdayDate
+        try:
+            upDown, diffPercent, yesterdayDate = getStockData(stock)
+        except:
+            upDown = 0
+            diffPercent = 0
+        else:
+            if abs(diffPercent) >= changeInStock:
+                topArticle = GetStockNews(companyName, yesterdayDate)
+                formattedArticle = formatArticle(stock, companyName, topArticle, upDown, diffPercent)
+                completeArticleList.append(topArticle)
+                articleList.append(formattedArticle)
+        
+    return articleList, completeArticleList,yesterdayDate
 
 
 @app.route('/')
