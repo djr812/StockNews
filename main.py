@@ -81,7 +81,7 @@ def getStockData(stock):
             return 0, 0, "2025-01-01"
 
 
-def getStockNews(companyName, yesterdayDate):
+def getStockNews(stock, companyName, yesterdayDate):
     """
     Name:       getStockNews
     Desc:       Get current news articles about company
@@ -96,9 +96,11 @@ def getStockNews(companyName, yesterdayDate):
     fDate = datetime.strptime(yesterdayDate, "%A, %d %B %Y") - timedelta(days=1)
     fromDate = fDate.strftime("%Y-%m-%d")
 
+    stock = stock[:-3] + " AND ASX"
+
     newsParams = {
         "apiKey": NEWS_API_KEY,
-        "q": companyName,
+        "q": stock,
         "searchIn": "content",
         "sortBy": "popularity",
         "from": fromDate,
@@ -239,7 +241,7 @@ def buildArticleList():
             tickerPoint = formatTickerPoint(stock, upDown, diffPercent)
             tickerList.append(tickerPoint)
             if abs(diffPercent) >= changeInStock:
-                topArticle = getStockNews(companyName, yesterdayDate)
+                topArticle = getStockNews(stock, companyName, yesterdayDate)
                 formattedArticle = formatArticle(
                     stock, companyName, topArticle, upDown, diffPercent
                 )

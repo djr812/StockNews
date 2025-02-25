@@ -37,7 +37,7 @@
                 <div class="news-column">
                     {% for key in article %}
                         <h3>{{ key['title'] }}</h3>
-                        <p><b>By:</b> {{ key['author'] }} &nbsp;&nbsp; <b>Posted:</b> {{ key['publishedAt'] | replace ("T"," ") | replace ("Z","") }}</p>
+                        <p><b>By:</b> {{ key['author'] }}, {{ key['source']['name'] }} &nbsp;&nbsp; <b>Posted On:</b> {{ key['publishedAt'] | replace ("T"," ") | replace ("Z","") }}</p>
                         <p>{{ key['content'] | replace ("&amp;", "&") }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
                     {% endfor %}
                 </div>
