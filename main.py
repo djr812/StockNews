@@ -139,7 +139,7 @@ def getASXNews(yesterdayDate):
     newsParams = {
         "apiKey": NEWS_API_KEY,
         "q": "ASX 200",
-        "searchIn": "content",
+        "searchIn": "title",
         "sortBy": "popularity",
         "from": fromDate,
         "language": "en",
@@ -263,6 +263,9 @@ def index():
     articles, completeArticleList, yesterdayDate, tickerList, asxArticles = (
         buildArticleList()
     )
+
+    asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
+
     return render_template(
         "index.html",
         articles=articles,
@@ -270,6 +273,7 @@ def index():
         yesterdayDate=yesterdayDate,
         tickerList=tickerList,
         asxArticles=asxArticles,
+        asxNewsDate=asxNewsDate,
     )
 
 

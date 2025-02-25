@@ -43,12 +43,12 @@
                 </div>
             {% endfor %}
         </section>
-        <p class="asx-200-news-heading"><b>ASX 200 News</b></p>
+        <p class="asx-200-news-heading"><b>ASX 200 News since {{ asxNewsDate.strftime('%A, %d %b %Y') }}</b></p>
         <section class="asx-news-columns">
             {% for key in asxArticles %}
                 <div class="asx-news-column">
                     <h3>{{ key.title }}</h3>
-                    <p><b>By:</b> {{ key.author }} &nbsp;&nbsp; <b>Posted:</b> {{ key.publishedAt | replace ("T"," ") | replace ("Z","") }}</p>
+                    <p><b>By:</b> {{ key.author }}, {{ key.source.name }} &nbsp;&nbsp;&nbsp; <b>Posted On:</b> {{ key.publishedAt | replace ("T"," ") | replace ("Z","") }}</p>
                     <p>{{ key.content | replace ("&amp;", "&") }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
                 </div>
             {% endfor %}
