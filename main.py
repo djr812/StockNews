@@ -85,24 +85,26 @@ def getStockData(stock):
 def getStockNews(stock, companyName, yesterdayDate):
     """
     Name:       getStockNews
-    Desc:       Get current news articles about company
-                passed in companyName from NewsAPI
-    Params:     companyName - string
+    Desc:       Get current news articles about the company
+                passed in companyName or stock from NewsAPI
+    Params:     stock - string
+                companyName - string
                 yesterdayDate - string
     Returns:    topArticle - list
     """
     # Use the News API to get articles related to the companyName
-    # from 2 days prior
+    # from 3 days prior
 
-    fDate = datetime.strptime(yesterdayDate, "%A, %d %B %Y") - timedelta(days=1)
+    fDate = datetime.strptime(yesterdayDate, "%A, %d %B %Y") - timedelta(days=3)
     fromDate = fDate.strftime("%Y-%m-%d")
 
     stock = stock[:-3] + " AND ASX"
 
     newsParams = {
         "apiKey": NEWS_API_KEY,
-        "q": stock,
+        "q": stock + " OR " + companyName,
         "searchIn": "content",
+        #"sources" : "australian-financial-review,abc-news-au,google-news-au,news-com-au",
         "sortBy": "popularity",
         "from": fromDate,
         "language": "en",
@@ -117,6 +119,8 @@ def getStockNews(stock, companyName, yesterdayDate):
             {
                 "title": "Unable to retrieve news data.",
                 "content": "Please try again later.",
+                "author" : "",
+                "source" : "",
                 "url": "",
             }
         ]
@@ -158,11 +162,15 @@ def getASXNews(yesterdayDate):
             {
                 "title": "Unable to retrieve news data.",
                 "content": "Please try again later.",
+                "author" : "",
+                "source" : "",
                 "url": "",
             },
             {
                 "title": "Unable to retrieve news data.",
                 "content": "Please try again later.",
+                "author" : "",
+                "source" : "",
                 "url": "",
             },
         ]
