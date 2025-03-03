@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, make_response
 from dotenv import load_dotenv
 import os
 import json
@@ -12,6 +12,7 @@ import yfinance as yf
 load_dotenv()
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+app.config ['TEMPLATES_AUTO_RELOAD'] = True
 application = app
 
 # News API details
@@ -249,7 +250,6 @@ def buildArticleList():
                     completeArticleList.append(topArticle)
                 articleList.append(formattedArticle)
     asxArticles = getASXNews(yesterdayDate)
-
     return articleList, completeArticleList, yesterdayDate, tickerList, asxArticles
 
 
@@ -262,21 +262,71 @@ def index():
     Params:     None
     Returns     render_template
     """
-    articles, completeArticleList, yesterdayDate, tickerList, asxArticles = (
-        buildArticleList()
-    )
+    
+ 
+    return render_template("index.html")
+ 
 
-    asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
+@app.route("/index2", methods=['GET', 'POST'])
+def index2():
+    if request.method == 'POST':
+        # Fetch data from API or database
+        articles, completeArticleList, yesterdayDate, tickerList, asxArticles = buildArticleList()
 
-    return render_template(
-        "index.html",
-        articles=articles,
-        completeArticleList=completeArticleList,
-        yesterdayDate=yesterdayDate,
-        tickerList=tickerList,
-        asxArticles=asxArticles,
-        asxNewsDate=asxNewsDate,
-    )
+        # Calculate the date
+        asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
+        asxNewsDate = datetime.strftime(asxNewsDate, '%A, %d %B %Y')
+
+        # Render and return the template with the data
+        return render_template(
+            "index2.html",
+            articles=articles,
+            completeArticleList=completeArticleList,
+            yesterdayDate=yesterdayDate,
+            tickerList=tickerList,
+            asxArticles=asxArticles,
+            asxNewsDate=asxNewsDate,
+        )
+
+    # If the request is GET, render the template without any additional data
+    return render_template("index2.html")
+
+
+
+
+# @app.route("/", methods=['GET','POST'])
+# def updateStockData():
+
+#     if request.method == 'POST' or request.method == 'GET':
+#         articles, completeArticleList, yesterdayDate, tickerList, asxArticles = buildArticleList()
+        
+#         asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
+#         print("Second Load")
+#     # elif request.method == 'GET':
+#     #     articles=""
+#     #     completeArticleList=[]
+#     #     yesterdayDate="2025/01/01"
+#     #     tickerList = []
+#     #     asxArticles = ""
+#     #     asxNewsDate = "2025/01/01"
+#     #     print("First Load")
+    
+#     # Render the template
+#     return render_template(
+#         "index.html",
+#         articles=articles,
+#         completeArticleList=completeArticleList,
+#         yesterdayDate=yesterdayDate,
+#         tickerList=tickerList,
+#         asxArticles=asxArticles,
+#         asxNewsDate=asxNewsDate,
+#     )
+
+
+@app.after_request
+def add_no_cache(response):
+    response.headers['Cache-Control'] = 'no-store'
+    return response
 
 
 if __name__ == "__main__":

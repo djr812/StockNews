@@ -6,58 +6,27 @@
     <title>Stock News</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    
 </head>
 <body>
     <header>
         <h1>Welcome to Stock News</h1>
     </header>
-    <main>
-        <h2>News for {{ yesterdayDate }}</h2>
-        <section>
-            <div class="ticker">
-                <marquee behavior="scroll" direction="left">
-                    {% for ticker in tickerList %}
-                        <span>{{ ticker | safe }}</span>
-                    {% endfor %}
-                </marquee>
-            </div>
-        </section>
-        <b>ASX100 Company's with a 1 Day rise or fall of > 5%</b>
-        <section>
-            <div class="news-ticker">
-                <marquee behavior="scroll" direction="left">
-                    {% for article in articles %}
-                        <span>{{ article }}</span>
-                    {% endfor %}
-                </marquee>
-            </div>
-        </section>
-        <section class="news-columns">
-            {% for article in completeArticleList %}
-                <div class="news-column">
-                    {% for key in article %}
-                        <h3>{{ key['title'] }}</h3>
-                        <p><b>By:</b> {{ key['author'] }}, {{ key['source']['name'] }} &nbsp;&nbsp; <b>Posted On:</b> {{ key['publishedAt'] | replace ("T"," ") | replace ("Z","") }}</p>
-                        <p>{{ key['content'] | replace ("&amp;", "&") }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </section>
-        <p class="asx-200-news-heading"><b>ASX 200 News since {{ asxNewsDate.strftime('%A, %d %b %Y') }}</b></p>
-        <section class="asx-news-columns">
-            {% for key in asxArticles %}
-                <div class="asx-news-column">
-                    <h3>{{ key.title }}</h3>
-                    <p><b>By:</b> {{ key.author }}, {{ key.source.name }} &nbsp;&nbsp;&nbsp; <b>Posted On:</b> {{ key.publishedAt | replace ("T"," ") | replace ("Z","") }}</p>
-                    <p>{{ key.content | replace ("&amp;", "&") }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
-                </div>
-            {% endfor %}
-        </section>
-    </main>
+    <div id="searchingOverlay" class="overlay">
+        <div class="overlayContent">
+            <p>Searching for Updated News Data...</p>
+        </div>
+    </div>
     <footer>
         <p>&copy; 2025 ASX. All rights reserved.</p>
         <p id="datetime"></p>
     </footer>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script> 
+        const searchingOverlay = document.getElementById("searchingOverlay");
+        searchingOverlay.style.display = "flex";
+        console.log('turn On Searching Overlay');
+    </script>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>    
 </body>
 </html>

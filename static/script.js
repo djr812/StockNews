@@ -25,5 +25,24 @@ function updateDateTime() {
 }
 
 
+function getStockData() {
+    //turnOnSearchingOverlay();
+
+    fetch('/index2', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ /* any data you need to send */ }),
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.body.innerHTML = html;  // Replace the page content with the new HTML
+    })
+    .catch(error => console.error('Error:', error));
+    
+}
+
 // Update date and time on page load
+getStockData();
 updateDateTime();

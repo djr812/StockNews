@@ -77,3 +77,32 @@ footer {
     width: 100%;
     bottom: 0;
 }
+/* The overlay container */
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Make sure it is above other content */
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* The flashing animation */
+.overlay p {
+    animation: flash 1s infinite;
+}
+
+/* Flash animation: Make the text appear and disappear */
+@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock News</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script>
+        const searchingOverlay = document.getElementById("searchingOverlay");
+        searchingOverlay.style.display = "none";
+        console.log('turn Off Searching Overlay');
+
+        let currentDate = new Date();
+        // Format date and time as 'Monday Feb 24, 2025 2:25PM'
+        let options = { 
+            weekday: 'long',  // Full weekday name (e.g. "Friday")
+            year: 'numeric',  // Full year (e.g. "2025")
+            month: 'short',   // Abbreviated month name (e.g. "Feb")
+            day: 'numeric',   // Day of the month (e.g. "24")
+            hour: 'numeric',  // Hour (e.g. "2")
+            minute: 'numeric',// Minute (e.g. "25")
+            hour12: true,      // 12-hour clock (e.g. "PM")
+            timeZoneName: 'short' // e.g., "AEST"
+        };
+
+        let formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+        formattedDate = formattedDate.replace(/(\w+), (\w+)/, '$1 $2'); // Remove the weekday comma
+        document.getElementById('currentTime').textContent = "Accurate as at: " + formattedDate;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Stock News</h1>
+    </header>
+    <main>
+        <h2>News for {{ yesterdayDate }}</h2>
+        <section>
+            <div class="ticker">
+                <marquee behavior="scroll" direction="left">
+                    {% for ticker in tickerList %}
+                        <span>{{ ticker | safe }}</span>
+                    {% endfor %}
+                </marquee>
+            </div>
+        </section>
+        <b>ASX100 Company's with a 1 Day rise or fall of > 5%</b>
+        <section>
+            <div class="news-ticker">
+                <marquee behavior="scroll" direction="left">
+                    {% for article in articles %}
+                        <span>{{ article }}</span>
+                    {% endfor %}
+                </marquee>
+            </div>
+        </section>
+        <!-- <div id="searchingOverlay" class="overlay">
+            <div class="overlayContent">
+                <p>Searching for Updated News Data...</p>
+            </div>
+        </div> -->
+        <section class="news-columns">
+            {% for article in completeArticleList %}
+                <div class="news-column">
+                    {% for key in article %}
+                        <h3>{{ key['title'] }}</h3>
+                        <p><b>By:</b> {{ key['author'] }}, {{ key['source']['name'] }} &nbsp;&nbsp; <b>Posted On:</b> {{ key['publishedAt'] | replace ("T"," ") | replace ("Z","") }}</p>
+                        <p>{{ key['content'] | replace ("&amp;", "&") }} <a href="{{ key['url'] }}" target="_blank">Read more</a></p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </section>
+        <p class="asx-200-news-heading"><b>ASX 200 News since {{ asxNewsDate }}</b></p>
+        <section class="asx-news-columns">
+            {% for key in asxArticles %}
+                <div class="asx-news-column">
+                    <h3>{{ key.title }}</h3>
+                    <p><b>By:</b> {{ key.author }}, {{ key.source.name }} &nbsp;&nbsp;&nbsp; <b>Posted On:</b> {{ key.publishedAt | replace ("T"," ") | replace ("Z","") }}</p>
+                    <p>{{ key.content | replace ("&amp;", "&") }} <a href="{{ key.url }}" target="_blank">Read more</a></p>
+                </div>
+            {% endfor %}
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 ASX. All rights reserved.</p>
+        <p id="currentTime"></p>
+    </footer>
+    
+</body>
+</html>
