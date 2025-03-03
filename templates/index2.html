@@ -10,23 +10,6 @@
         const searchingOverlay = document.getElementById("searchingOverlay");
         searchingOverlay.style.display = "none";
         console.log('turn Off Searching Overlay');
-
-        let currentDate = new Date();
-        // Format date and time as 'Monday Feb 24, 2025 2:25PM'
-        let options = { 
-            weekday: 'long',  // Full weekday name (e.g. "Friday")
-            year: 'numeric',  // Full year (e.g. "2025")
-            month: 'short',   // Abbreviated month name (e.g. "Feb")
-            day: 'numeric',   // Day of the month (e.g. "24")
-            hour: 'numeric',  // Hour (e.g. "2")
-            minute: 'numeric',// Minute (e.g. "25")
-            hour12: true,      // 12-hour clock (e.g. "PM")
-            timeZoneName: 'short' // e.g., "AEST"
-        };
-
-        let formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
-        formattedDate = formattedDate.replace(/(\w+), (\w+)/, '$1 $2'); // Remove the weekday comma
-        document.getElementById('currentTime').textContent = "Accurate as at: " + formattedDate;
     </script>
 </head>
 <body>
@@ -54,11 +37,6 @@
                 </marquee>
             </div>
         </section>
-        <!-- <div id="searchingOverlay" class="overlay">
-            <div class="overlayContent">
-                <p>Searching for Updated News Data...</p>
-            </div>
-        </div> -->
         <section class="news-columns">
             {% for article in completeArticleList %}
                 <div class="news-column">
@@ -82,8 +60,9 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2025 ASX. All rights reserved.</p>
-        <p id="currentTime"></p>
+        <p style="font-size: 10px;">&copy; 2025 ASX. All rights reserved.</p>
+        <p id="currentTime" style="font-size: 10px;">Accurate as at {{ formattedDateTime }} AEST</p>
+        <p style="font-size: 10px;">Powered by yFinance</p>
     </footer>
     
 </body>

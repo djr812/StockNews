@@ -257,25 +257,34 @@ def buildArticleList():
 def index():
     """
     Name:       index
-    Desc:       Trigger building of index.html and pass
-                relevant data
+    Desc:       Create a splash page to advise the user
+                that data is currently being loaded
     Params:     None
     Returns     render_template
     """
-    
- 
     return render_template("index.html")
  
 
 @app.route("/index2", methods=['GET', 'POST'])
 def index2():
+    """
+    Name:       index2
+    Desc:       Trigger the extraction of data while 
+                splash page is being presented
+    Params:     None
+    Returns     render_template
+    """
     if request.method == 'POST':
         # Fetch data from API or database
         articles, completeArticleList, yesterdayDate, tickerList, asxArticles = buildArticleList()
 
-        # Calculate the date
+        # Calculate the date minus 3 days
         asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
         asxNewsDate = datetime.strftime(asxNewsDate, '%A, %d %B %Y')
+
+        # Get the current date/timn
+        currentDateTime = datetime.now()
+        formattedDateTime = datetime.strftime(currentDateTime, '%a, %d %B %Y %I:%M%p')
 
         # Render and return the template with the data
         return render_template(
@@ -286,43 +295,14 @@ def index2():
             tickerList=tickerList,
             asxArticles=asxArticles,
             asxNewsDate=asxNewsDate,
+            formattedDateTime=formattedDateTime
         )
 
     # If the request is GET, render the template without any additional data
     return render_template("index2.html")
 
 
-
-
-# @app.route("/", methods=['GET','POST'])
-# def updateStockData():
-
-#     if request.method == 'POST' or request.method == 'GET':
-#         articles, completeArticleList, yesterdayDate, tickerList, asxArticles = buildArticleList()
-        
-#         asxNewsDate = datetime.strptime(yesterdayDate, '%A, %d %B %Y') - timedelta(days=3)
-#         print("Second Load")
-#     # elif request.method == 'GET':
-#     #     articles=""
-#     #     completeArticleList=[]
-#     #     yesterdayDate="2025/01/01"
-#     #     tickerList = []
-#     #     asxArticles = ""
-#     #     asxNewsDate = "2025/01/01"
-#     #     print("First Load")
-    
-#     # Render the template
-#     return render_template(
-#         "index.html",
-#         articles=articles,
-#         completeArticleList=completeArticleList,
-#         yesterdayDate=yesterdayDate,
-#         tickerList=tickerList,
-#         asxArticles=asxArticles,
-#         asxNewsDate=asxNewsDate,
-#     )
-
-
+# Ensure Flash does not cache page data
 @app.after_request
 def add_no_cache(response):
     response.headers['Cache-Control'] = 'no-store'

@@ -26,14 +26,13 @@ function updateDateTime() {
 
 
 function getStockData() {
-    //turnOnSearchingOverlay();
 
     fetch('/index2', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ /* any data you need to send */ }),
+        body: JSON.stringify({  }),
     })
     .then(response => response.text())
     .then(html => {
