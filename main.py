@@ -292,7 +292,7 @@ def index2():
 
         # Get the current date/timn
         currentDateTime = datetime.now()
-        formattedDateTime = datetime.strftime(currentDateTime, '%a, %d %B %Y %I:%M%p')
+        #formattedDateTime = datetime.strftime(currentDateTime, '%a, %d %B %Y %I:%M%p')
 
         # Render and return the template with the data
         return render_template(
@@ -303,7 +303,7 @@ def index2():
             tickerList=tickerList,
             asxArticles=asxArticles,
             asxNewsDate=asxNewsDate,
-            formattedDateTime=formattedDateTime
+            currentDateTime=currentDateTime
         )
 
     # If the request is GET, render the template without any additional data

@@ -18,14 +18,13 @@
         </div>
     </div>
     <footer>
-        <p style="font-size: 10px;">&copy; 2025 ASX. All rights reserved.</p>
-        <p id="datetime" style="font-size: 10px;">Accurate as at {{ formattedDateTime }} AEST</p>
+        <p id="cr" style="font-size: 10px;"></p>
+        <p id="datetime" style="font-size: 10px;"></p>
         <p style="font-size: 10px;">Powered by yFinance</p>
     </footer>
     <script> 
         const searchingOverlay = document.getElementById("searchingOverlay");
         searchingOverlay.style.display = "flex";
-        console.log('turn On Searching Overlay');
     </script>
     
     <script src="{{ url_for('static', filename='script.js') }}"></script>    

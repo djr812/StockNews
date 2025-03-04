@@ -60,8 +60,8 @@
         </section>
     </main>
     <footer>
-        <p style="font-size: 10px;">&copy; 2025 ASX. All rights reserved.</p>
-        <p id="currentTime" style="font-size: 10px;">Accurate as at {{ formattedDateTime }} AEST</p>
+        <p style="font-size: 10px;">&copy; {{ currentDateTime.strftime('%Y') }} ASX. All rights reserved.</p>
+        <p id="currentTime" style="font-size: 10px;">Accurate as at {{ currentDateTime.strftime('%a, %d %B %Y %I:%M%p') }} AEST</p>
         <p style="font-size: 10px;">Powered by yFinance</p>
     </footer>
     
